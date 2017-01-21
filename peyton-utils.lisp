@@ -27,19 +27,30 @@
                 rest
                 :initial-value (apply fn1 args)))))
 
-(defun read-until (separator stream &key (read #'read-char) (test #'char=))
+(defun read-until (separator stream &key (read #'read-char) (test #'eq) acc)
   "Builds a list of characters until the separator character is reached."
   (let ((character (funcall read stream nil)))
     (if (or (not character) (funcall test separator character))
         (reverse acc)
-        (read-until separator stream (cons character acc)))))
+        (read-until separator stream
+                    :read read :test test :acc (cons character acc)))))
 
-(defun read-until-not (separator stream &key (read #'read-char) (test #'char=))
+(defun read-until-not (separator stream &key (read #'read-char) (test #'eq))
   "Builds a list of characters until the characters are not the same."
-  (read-until separater stream :read read :test (compose #'not test)))
+  (read-until separator stream :read read :test (compose #'not test))
+  (file-position stream (1- (file-position stream))))
 
 (defun octets->integer (octets)
   "Given a list of octets, converts them to a decimal value."
-  (loop for octet in octets
-     summing (+ octet (ash total 8)) into total
-     finally (return total)))
+  (if (listp octets)
+      (loop for octet in octets
+         summing (+ octet (ash total 8)) into total
+         finally (return total))
+      octets))
+
+(defun octets->string (octets)
+  (coerce (mapcar (compose #'code-char #'octets->integer) octets) 'string))
+
+(defmacro with-gensyms (syms &body body)
+  `(let ,(loop for s in syms collect `(,s (gensym)))
+     ,@body))

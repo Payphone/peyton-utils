@@ -8,5 +8,7 @@
            #:compose
            #:it
            #:octets->integer
+           #:octets->string
            #:read-until
-           #:read-until-not))
+           #:read-until-not
+           #:with-gensyms))
