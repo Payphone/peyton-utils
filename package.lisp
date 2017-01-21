@@ -6,6 +6,7 @@
            #:asetf
            #:cat
            #:compose
+           #:it
            #:octets->integer
            #:read-until
            #:read-until-not))
