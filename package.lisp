@@ -11,4 +11,5 @@
            #:octets->string
            #:read-until
            #:read-until-not
-           #:with-gensyms))
+           #:with-gensyms
+           #:snoc))

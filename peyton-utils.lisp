@@ -40,13 +40,11 @@
   (read-until separator stream :read read :test (compose #'not test))
   (file-position stream (1- (file-position stream))))
 
-(defun octets->integer (octets)
+(defun octets->integer (octets &optional (acc 0))
   "Given a list of octets, converts them to a decimal value."
-  (if (listp octets)
-      (loop for octet in octets
-         summing (+ octet (ash total 8)) into total
-         finally (return total))
-      octets))
+  (cond ((atom octets) octets)
+        ((null octets) acc)
+        (t (octets->integer (cdr octets) (+ (car octets) (ash acc 8))))))
 
 (defun octets->string (octets)
   (coerce (mapcar (compose #'code-char #'octets->integer) octets) 'string))
@@ -54,3 +52,7 @@
 (defmacro with-gensyms (syms &body body)
   `(let ,(loop for s in syms collect `(,s (gensym)))
      ,@body))
+
+(defun snoc (item lst)
+  "Conses an item to the end of a list."
+  (reverse (cons item (reverse lst))))
