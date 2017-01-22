@@ -42,8 +42,8 @@
 
 (defun octets->integer (octets &optional (acc 0))
   "Given a list of octets, converts them to a decimal value."
-  (cond ((atom octets) octets)
-        ((null octets) acc)
+  (cond ((null octets) acc)
+        ((atom octets) octets)
         (t (octets->integer (cdr octets) (+ (car octets) (ash acc 8))))))
 
 (defun octets->string (octets)
