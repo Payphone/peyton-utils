@@ -6,6 +6,7 @@
            #:asetf
            #:cat
            #:compose
+           #:flatten
            #:it
            #:octets->integer
            #:octets->string

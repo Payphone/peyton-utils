@@ -19,13 +19,18 @@
   "Concatenates strings."
   `(concatenate 'string ,@strings))
 
-(defun compose (&rest fns)
+(defun compose (fn &rest fns)
   "Returns a new function by applying functions to each other."
-  (destructuring-bind (fn1 . rest) (reverse fns)
-    #'(lambda (&rest args)
-        (reduce #'(lambda (v f) (funcall f v))
-                rest
-                :initial-value (apply fn1 args)))))
+  (reduce (lambda (fn1 fn2)
+            (lambda (&rest arguments)
+              (funcall fn1 (apply fn2 arguments))))
+          fns :initial-value fn))
+
+(defun flatten (lst &optional acc)
+  (when lst
+    (if (listp lst)
+        (flatten (car lst) (flatten (cdr lst) acc))
+        (cons lst acc))))
 
 (defun read-until (separator stream &key (read #'read-char) (test #'eq) acc)
   "Builds a list of characters until the separator character is reached."
