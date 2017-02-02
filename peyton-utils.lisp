@@ -15,6 +15,10 @@
   `(let ((it ,value))
      (setf ,value ,new-value)))
 
+(defmacro awhen (condition &body body)
+  `(let ((it ,condition))
+     (when it ,@body)))
+
 (defmacro cat (&rest strings)
   "Concatenates strings."
   `(concatenate 'string ,@strings))
@@ -33,17 +37,17 @@
         (cons lst acc))))
 
 (defun read-until (separator stream &key (read #'read-char) (test #'eq)
-                                      (type 'string) acc)
+                                      type acc)
   "Builds a list of characters until the separator character is reached.
   Does not include the separator in the output."
   (let ((character (funcall read stream nil)))
-    (if (or (not character) (funcall test separator character))
-        (coerce (reverse acc) type)
+    (if (or (null character) (funcall test separator character))
+        (if type (coerce (reverse acc) type) (reverse acc))
         (read-until separator stream
                     :read read :test test :type type :acc (cons character acc)))))
 
 (defun read-until-not (separator stream &key (read #'read-char) (test #'eq)
-                                          (type 'string))
+                                          type)
   "Builds a list of characters until the characters are not the same."
   (read-until separator stream :read read :test (compose #'not test) :type type)
   (file-position stream (1- (file-position stream))))

@@ -4,6 +4,7 @@
   (:use #:cl)
   (:export #:aif
            #:asetf
+           #:awhen
            #:cat
            #:compose
            #:flatten
