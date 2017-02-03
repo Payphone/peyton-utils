@@ -36,21 +36,21 @@
         (flatten (car lst) (flatten (cdr lst) acc))
         (cons lst acc))))
 
-(defun read-until (separator stream &key (read #'read-char) (test #'eq)
-                                      type acc)
+(defun read-until (separator stream &key (read #'read-char) (test #'eq) acc)
   "Builds a list of characters until the separator character is reached.
   Does not include the separator in the output."
   (let ((character (funcall read stream nil)))
     (if (or (null character) (funcall test separator character))
-        (if type (coerce (reverse acc) type) (reverse acc))
+        (reverse acc)
         (read-until separator stream
-                    :read read :test test :type type :acc (cons character acc)))))
+                    :read read :test test :acc (cons character acc)))))
 
-(defun read-until-not (separator stream &key (read #'read-char) (test #'eq)
-                                          type)
+(defun read-until-not (separator stream &key (read #'read-char) (test #'eq))
   "Builds a list of characters until the characters are not the same."
-  (read-until separator stream :read read :test (compose #'not test) :type type)
-  (file-position stream (1- (file-position stream))))
+  (let ((values (read-until separator stream :read read
+                            :test (compose #'not test))))
+    (file-position stream (1- (file-position stream)))
+    values))
 
 (defun octets->integer (octets &optional (acc 0))
   "Given a list of octets, converts them to a decimal value."
