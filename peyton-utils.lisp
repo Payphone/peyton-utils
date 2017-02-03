@@ -49,9 +49,8 @@
   "Builds a list of characters until the characters are not the same."
   (let ((values (read-until separator stream :read read
                             :test (compose #'not test))))
-    (when values
-      (file-position stream (1- (file-position stream)))
-      values)))
+    (file-position stream (1- (file-position stream)))
+    values))
 
 (defun read-file (file)
   (coerce (with-open-file (in file) (read-until :EOF in)) 'string))
