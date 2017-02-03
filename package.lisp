@@ -11,6 +11,7 @@
            #:it
            #:octets->integer
            #:octets->string
+           #:read-file
            #:read-until
            #:read-until-not
            #:with-gensyms
