@@ -6,6 +6,8 @@
            #:asetf
            #:awhen
            #:cat
+           #:collect-between
+           #:collect-until
            #:compose
            #:flatten
            #:it
@@ -16,5 +18,6 @@
            #:read-until
            #:read-until-not
            #:unread-1
+           #:remove-until
            #:with-gensyms
            #:snoc))
