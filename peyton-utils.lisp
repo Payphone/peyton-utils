@@ -36,9 +36,18 @@
         (flatten (car lst) (flatten (cdr lst) acc))
         (cons lst acc))))
 
+(defun unread-1 (stream)
+  "Moves the file back one element. "
+  (file-position stream (1- (file-position stream))))
+
+(defun read-between (from to stream &key (read #'read-char) (test #'eq))
+  (read-until from stream :read read :test test)
+  (read-until to stream :read read :test test))
+
 (defun read-until (separator stream &key (read #'read-char) (test #'eq) acc)
   "Builds a list of characters until the separator character is reached.
-  Does not include the separator in the output."
+  Does not include the separator in the output, but removes the separator from
+  the stream."
   (let ((character (funcall read stream nil)))
     (if (or (null character) (funcall test separator character))
         (reverse acc)
@@ -46,10 +55,11 @@
                     :read read :test test :acc (cons character acc)))))
 
 (defun read-until-not (separator stream &key (read #'read-char) (test #'eq))
-  "Builds a list of characters until the characters are not the same."
+  "Builds a list of characters until the characters are not equal to the
+  separator."
   (let ((values (read-until separator stream :read read
                             :test (compose #'not test))))
-    (file-position stream (1- (file-position stream)))
+    (unread-1 stream)
     values))
 
 (defun read-file (file)

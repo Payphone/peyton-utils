@@ -12,7 +12,9 @@
            #:octets->integer
            #:octets->string
            #:read-file
+           #:read-between
            #:read-until
            #:read-until-not
+           #:unread-1
            #:with-gensyms
            #:snoc))
