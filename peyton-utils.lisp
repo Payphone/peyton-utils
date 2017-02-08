@@ -99,7 +99,7 @@
   (if lst
       (if (funcall fn (car lst))
           (collect fn (cdr lst) (cons (car lst) acc))
-p          (collect fn (cdr lst) acc))
+          (collect fn (cdr lst) acc))
       (reverse acc)))
 
 (defmacro until (condition &body do)
