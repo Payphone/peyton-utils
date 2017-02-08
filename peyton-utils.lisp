@@ -126,6 +126,13 @@
   "Collects all the elements lying between two separators."
   (collect-until to (remove-until from lst :test test) :test test))
 
+(defun elt0 (sequence)
+  "Returns the first element in a sequence."
+  (elt sequence 0))
+
+(defun last1 (lst)
+  (car (last lst)))
+
 (defun snoc (item lst)
   "Conses an item to the end of a list."
   (reverse (cons item (reverse lst))))
