@@ -2,11 +2,14 @@
 
 (defpackage #:peyton-utils
   (:use #:cl)
-  (:export #:aif
+  (:export #:accumulate
+           #:aif
            #:asetf
            #:awhen
            #:cat
            #:collect-between
+           #:collect-n
+           #:collect-to
            #:collect-until
            #:compose
            #:flatten
@@ -18,6 +21,7 @@
            #:read-until
            #:read-until-not
            #:unread-1
+           #:until
            #:remove-until
            #:with-gensyms
            #:snoc))

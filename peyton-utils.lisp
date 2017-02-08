@@ -81,11 +81,37 @@
         (flatten (car lst) (flatten (cdr lst) acc))
         (cons lst acc))))
 
+(defun collect-n (n lst &optional acc)
+  (if (< n 1)
+      (reverse acc)
+      (collect-n (1- n) (cdr lst) (cons (car lst) acc))))
+
+(defun collect-to (separators lst &key (test #'eq) acc)
+  (when lst
+    (let* ((move-by (length separators))
+           (elements (collect-n move-by lst)))
+      (if (funcall test separators elements)
+          (reverse acc)
+          (collect-to separators (nthcdr move-by lst) :test test
+                      :acc (append elements acc))))))
+
+(defun collect (fn lst &optional acc)
+  (if lst
+      (if (funcall fn (car lst))
+          (collect fn (cdr lst) (cons (car lst) acc))
+p          (collect fn (cdr lst) acc))
+      (reverse acc)))
+
+(defmacro until (condition &body do)
+  `(do ()
+       ((,@condition))
+     ,@do))
+
 (defun collect-until (separator lst &key (test #'eq) acc)
   "Collects elements of a list until the separator is reached."
   (let ((element (car lst)))
     (if (funcall test separator element)
-        (reverse  acc)
+        (reverse acc)
         (collect-until separator (cdr lst) :test test :acc (cons element acc)))))
 
 (defun remove-until (separator lst &key (test #'eq))
@@ -116,3 +142,11 @@
 (defun octets->string (octets)
   "Given a list of octets, converts them to a string."
   (coerce (mapcar (compose #'code-char #'octets->integer) octets) 'string))
+
+
+;; Miscellaneous
+
+; For some reason it bothered me that I had to use values for a single value
+(defun value (value)
+  "Returns a single value."
+  (values value))
