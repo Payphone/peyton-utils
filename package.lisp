@@ -7,13 +7,16 @@
            #:asetf
            #:awhen
            #:cat
+           #:collect
            #:collect-between
            #:collect-n
            #:collect-to
            #:collect-until
            #:compose
+           #:elt0
            #:flatten
            #:it
+           #:last1
            #:octets->integer
            #:octets->string
            #:read-file
