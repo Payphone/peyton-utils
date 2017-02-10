@@ -17,6 +17,7 @@
            #:flatten
            #:it
            #:last1
+           #:mkstr
            #:octets->integer
            #:octets->string
            #:read-file
@@ -26,5 +27,7 @@
            #:unread-1
            #:until
            #:remove-until
+           #:split-string
+           #:symb
            #:with-gensyms
            #:snoc))

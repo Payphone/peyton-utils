@@ -71,6 +71,12 @@
   "Reads an entire file at once converting it to a string."
   (coerce (with-open-file (in file) (read-until :EOF in)) 'string))
 
+(defun split-string (separator string)
+  "Returns a list of strings split by the separator."
+  (with-input-from-string (in string)
+    (loop for split = (read-until separator in)
+       until (null split)
+       collect (coerce split 'string))))
 
 ;; List functions
 
@@ -109,10 +115,11 @@
 
 (defun collect-until (separator lst &key (test #'eq) acc)
   "Collects elements of a list until the separator is reached."
-  (let ((element (car lst)))
-    (if (funcall test separator element)
-        (reverse acc)
-        (collect-until separator (cdr lst) :test test :acc (cons element acc)))))
+  (when lst
+    (let ((element (car lst)))
+      (if (funcall test separator element)
+          (reverse acc)
+          (collect-until separator (cdr lst) :test test :acc (cons element acc))))))
 
 (defun remove-until (separator lst &key (test #'eq))
   "Removes elements of a list until the separator is reached, returning the new
@@ -139,6 +146,15 @@
 
 
 ;; Conversions
+
+(defun mkstr (&rest args)
+  "Converts arguments to a string."
+  (with-output-to-string (s)
+    (dolist (a args) (princ a s))))
+
+(defun symb (&rest args)
+  "Converts arguments to symbols."
+  (values (intern (apply #'mkstr args))))
 
 (defun octets->integer (octets &optional (acc 0))
   "Given a list of octets, converts them to a decimal value."
