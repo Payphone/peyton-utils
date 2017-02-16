@@ -69,7 +69,7 @@
 
 (defun read-file (file)
   "Reads an entire file at once converting it to a string."
-  (coerce (with-open-file (in file) (read-until :EOF in)) 'string))
+  (coerce (with-open-file (in file :external-format :utf-8) (read-until :EOF in)) 'string))
 
 (defun split-string (separator string)
   "Returns a list of strings split by the separator."
@@ -115,19 +115,21 @@
 
 (defun collect-until (separator lst &key (test #'eq) acc)
   "Collects elements of a list until the separator is reached."
-  (when lst
+  (if lst
     (let ((element (car lst)))
       (if (funcall test separator element)
           (reverse acc)
-          (collect-until separator (cdr lst) :test test :acc (cons element acc))))))
+          (collect-until separator (cdr lst) :test test :acc (cons element acc))))
+    (reverse acc)))
 
 (defun remove-until (separator lst &key (test #'eq))
   "Removes elements of a list until the separator is reached, returning the new
   list."
-  (let ((element (car lst)))
-    (if (funcall test separator element)
-        (cdr lst)
-        (remove-until separator (cdr lst) :test test))))
+  (when lst
+    (let ((element (car lst)))
+      (if (funcall test separator element)
+          (cdr lst)
+          (remove-until separator (cdr lst) :test test)))))
 
 (defun collect-between (from to lst &key (test #' eq))
   "Collects all the elements lying between two separators."
