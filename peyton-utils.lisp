@@ -50,7 +50,7 @@
   the stream."
   (let ((character (funcall read stream nil)))
     (if (or (null character) (funcall test separator character))
-        (reverse acc)
+        (coerce (reverse acc) 'string)
         (read-until separator stream
                     :read read :test test :acc (cons character acc)))))
 
