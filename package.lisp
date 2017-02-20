@@ -6,8 +6,8 @@
            #:aif
            #:asetf
            #:awhen
-           #:cat
            #:collect
+           #:collect-around
            #:collect-between
            #:collect-n
            #:collect-to
@@ -17,6 +17,7 @@
            #:flatten
            #:it
            #:last1
+           #:metalist
            #:mkstr
            #:octets->integer
            #:octets->string
@@ -29,5 +30,6 @@
            #:remove-until
            #:split-string
            #:symb
+           #:value
            #:with-gensyms
            #:snoc))

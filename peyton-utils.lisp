@@ -25,11 +25,7 @@
   `(let ((it ,condition))
      (when it ,@body)))
 
-(defmacro cat (&rest strings)
-  "Shorthand for concatenating strings."
-  `(concatenate 'string ,@strings))
-
-; Not really a macro, but it feels like it belongs here.
+;; Not really a macro, but it feels like it belongs here.
 (defun compose (fn &rest fns)
   "Returns a new function by applying functions to each other."
   (reduce (lambda (fn1 fn2)
@@ -49,8 +45,8 @@
   Does not include the separator in the output, but removes the separator from
   the stream."
   (let ((character (funcall read stream nil)))
-    (if (or (null character) (funcall test separator character))
-        (coerce (reverse acc) 'string)
+    (if (or (not character) (funcall test separator character))
+        (if acc (coerce (reverse acc) 'string))
         (read-until separator stream
                     :read read :test test :acc (cons character acc)))))
 
@@ -69,7 +65,8 @@
 
 (defun read-file (file)
   "Reads an entire file at once converting it to a string."
-  (coerce (with-open-file (in file :external-format :utf-8) (read-until :EOF in)) 'string))
+  (coerce (with-open-file (in file :external-format :utf-8)
+            (read-until :EOF in)) 'string))
 
 (defun split-string (separator string)
   "Returns a list of strings split by the separator."
@@ -121,6 +118,10 @@
           (reverse acc)
           (collect-until separator (cdr lst) :test test :acc (cons element acc))))
     (reverse acc)))
+
+(defun collect-around (separator lst &key (test #'eq))
+  (append (collect-until separator lst :test test)
+          (remove-until separator lst :test test)))
 
 (defun remove-until (separator lst &key (test #'eq))
   "Removes elements of a list until the separator is reached, returning the new
