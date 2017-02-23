@@ -1,7 +1,7 @@
 ;;;; package.lisp
 
 (defpackage #:peyton-utils
-  (:use #:cl)
+  (:use #:cl #:alexandria)
   (:export #:accumulate
            #:aif
            #:asetf
@@ -12,9 +12,8 @@
            #:collect-n
            #:collect-to
            #:collect-until
-           #:compose
            #:elt0
-           #:flatten
+           #:internalize-symbols
            #:it
            #:last1
            #:metalist
@@ -31,5 +30,4 @@
            #:split-string
            #:symb
            #:value
-           #:with-gensyms
            #:snoc))

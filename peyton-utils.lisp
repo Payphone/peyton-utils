@@ -25,15 +25,6 @@
   `(let ((it ,condition))
      (when it ,@body)))
 
-;; Not really a macro, but it feels like it belongs here.
-(defun compose (fn &rest fns)
-  "Returns a new function by applying functions to each other."
-  (reduce (lambda (fn1 fn2)
-            (lambda (&rest arguments)
-              (funcall fn1 (apply fn2 arguments))))
-          fns :initial-value fn))
-
-
 ;; Read and file functions
 
 (defun unread-1 (stream)
@@ -76,13 +67,6 @@
        collect (coerce split 'string))))
 
 ;; List functions
-
-(defun flatten (lst &optional acc)
-  "Takes a list and returns all the atoms regardless of the atom's depth."
-  (when lst
-    (if (listp lst)
-        (flatten (car lst) (flatten (cdr lst) acc))
-        (cons lst acc))))
 
 (defun collect-n (n lst &optional acc)
   (if (< n 1)
@@ -158,6 +142,13 @@
 (defun symb (&rest args)
   "Converts arguments to symbols."
   (values (intern (apply #'mkstr args))))
+
+(defun internalize-symbols (lst &optional acc)
+  (let ((elt (car lst)))
+    (if lst
+        (internalize-symbols (cdr lst) (cons (if (symbolp elt) (symb elt) elt)
+                                             acc))
+        (reverse acc))))
 
 (defun octets->integer (octets &optional (acc 0))
   "Given a list of octets, converts them to a decimal value."
