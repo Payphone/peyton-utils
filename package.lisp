@@ -2,8 +2,7 @@
 
 (defpackage #:peyton-utils
   (:use #:cl #:alexandria)
-  (:export #:accumulate
-           #:aif
+  (:export #:aif
            #:asetf
            #:awhen
            #:collect
@@ -12,12 +11,7 @@
            #:collect-n
            #:collect-to
            #:collect-until
-           #:elt0
-           #:internalize-symbols
            #:it
-           #:last1
-           #:metalist
-           #:mkstr
            #:octets->integer
            #:octets->string
            #:read-file
@@ -27,7 +21,4 @@
            #:unread-1
            #:until
            #:remove-until
-           #:split-string
-           #:symb
-           #:value
            #:snoc))

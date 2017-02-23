@@ -54,18 +54,6 @@
   (read-until from stream :read read :test test)
   (read-until to stream :read read :test test))
 
-(defun read-file (file)
-  "Reads an entire file at once converting it to a string."
-  (coerce (with-open-file (in file :external-format :utf-8)
-            (read-until :EOF in)) 'string))
-
-(defun split-string (separator string)
-  "Returns a list of strings split by the separator."
-  (with-input-from-string (in string)
-    (loop for split = (read-until separator in)
-       until (null split)
-       collect (coerce split 'string))))
-
 ;; List functions
 
 (defun collect-n (n lst &optional acc)
@@ -88,11 +76,6 @@
           (collect fn (cdr lst) (cons (car lst) acc))
           (collect fn (cdr lst) acc))
       (reverse acc)))
-
-(defmacro until (condition &body do)
-  `(do ()
-       ((,@condition))
-     ,@do))
 
 (defun collect-until (separator lst &key (test #'eq) acc)
   "Collects elements of a list until the separator is reached."
@@ -120,35 +103,12 @@
   "Collects all the elements lying between two separators."
   (collect-until to (remove-until from lst :test test) :test test))
 
-(defun elt0 (sequence)
-  "Returns the first element in a sequence."
-  (elt sequence 0))
-
-(defun last1 (lst)
-  (car (last lst)))
-
 (defun snoc (item lst)
   "Conses an item to the end of a list."
   (reverse (cons item (reverse lst))))
 
 
 ;; Conversions
-
-(defun mkstr (&rest args)
-  "Converts arguments to a string."
-  (with-output-to-string (s)
-    (dolist (a args) (princ a s))))
-
-(defun symb (&rest args)
-  "Converts arguments to symbols."
-  (values (intern (apply #'mkstr args))))
-
-(defun internalize-symbols (lst &optional acc)
-  (let ((elt (car lst)))
-    (if lst
-        (internalize-symbols (cdr lst) (cons (if (symbolp elt) (symb elt) elt)
-                                             acc))
-        (reverse acc))))
 
 (defun octets->integer (octets &optional (acc 0))
   "Given a list of octets, converts them to a decimal value."
