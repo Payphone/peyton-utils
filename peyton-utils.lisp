@@ -119,11 +119,3 @@
 (defun octets->string (octets)
   "Given a list of octets, converts them to a string."
   (coerce (mapcar (compose #'code-char #'octets->integer) octets) 'string))
-
-
-;; Miscellaneous
-
-; For some reason it bothered me that I had to use values for a single value
-(defun value (value)
-  "Returns a single value."
-  (values value))
