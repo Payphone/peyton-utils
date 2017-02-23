@@ -1,7 +1,7 @@
 ;;;; package.lisp
 
 (defpackage #:peyton-utils
-  (:use #:cl #:alexandria)
+  (:use #:cl)
   (:export #:aif
            #:asetf
            #:awhen
